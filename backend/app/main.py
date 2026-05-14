@@ -4,6 +4,7 @@ from app.routes.lead import router as lead_router
 from app.routes.discussion import router as discussion_router
 from app.routes.auth import get_current_user, router as auth_router
 from app.routes.user import router as user_router
+from app.routes.ai import router as ai_router
 
 app = FastAPI(
     title="LeadFlow CRM API",
@@ -23,6 +24,7 @@ app.include_router(auth_router, prefix="/api")
 app.include_router(user_router, prefix="/api", dependencies=[Depends(get_current_user)])
 app.include_router(lead_router, prefix="/api", dependencies=[Depends(get_current_user)])
 app.include_router(discussion_router, prefix="/api", dependencies=[Depends(get_current_user)])
+app.include_router(ai_router, prefix="/api", dependencies=[Depends(get_current_user)])
 
 @app.get("/")
 def root():

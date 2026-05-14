@@ -7,15 +7,26 @@ from sqlalchemy.orm import DeclarativeBase
 from app.core.config import settings
 
 
-# SQLite async engine (uses aiosqlite)
+# Database async engine
 database_url = settings.async_database_url
+is_sqlite = database_url.startswith("sqlite")
+is_postgres = database_url.startswith("postgresql")
+
+connect_args = {}
+if is_sqlite:
+    connect_args["check_same_thread"] = False
+if is_postgres:
+    # Supabase/PgBouncer fixes:
+    # Disable prepared statements if using transaction pooling (common in Supabase)
+    connect_args["statement_cache_size"] = 0
 
 engine = create_async_engine(
     database_url,
     echo=settings.environment == "development",
-    connect_args={"check_same_thread": False},
+    connect_args=connect_args,
     future=True,
 )
+
 
 # Async session factory
 AsyncSessionLocal = async_sessionmaker(

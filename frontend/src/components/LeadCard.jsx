@@ -1,8 +1,10 @@
 import StatusBadge from './StatusBadge';
 import AIScoreBadge from './AIScoreBadge';
 import { formatDateTime, isOverdue, isToday, timeAgo } from '../utils/time';
+import { useAIStore } from '../store/aiStore';
 
 export default function LeadCard({ lead, onClick, aiScore = 'Warm' }) {
+  const cachedScore = useAIStore((state) => state.scores[lead.id]?.score);
   const overdue = isOverdue(lead.follow_up_at);
   const today = isToday(lead.follow_up_at);
 
@@ -22,7 +24,7 @@ export default function LeadCard({ lead, onClick, aiScore = 'Warm' }) {
         <p className="text-sm font-semibold text-gray-900">{lead.name}</p>
         <div className="flex items-center gap-2">
           <StatusBadge status={lead.status} />
-          <AIScoreBadge score={aiScore} />
+          <AIScoreBadge score={cachedScore || aiScore} />
         </div>
       </div>
       <p className="text-sm text-gray-500">{lead.company || 'No company'}</p>

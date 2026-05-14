@@ -8,6 +8,15 @@ from app.core.database import get_db
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse, Token
 from app.services.auth import create_access_token, verify_tokens
+import logging
+from app.core.log_format import JSONFormatter
+
+handler = logging.StreamHandler()
+handler.setFormatter(JSONFormatter())
+logger = logging.getLogger("goals_router")
+if not logger.handlers:
+    logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -57,6 +66,12 @@ async def register(
     # Check if email already exists
     existing = await get_user_by_email(db=db, email=payload.email)
     if existing:
+        logger.warning({
+            "event": "registration_failed",
+            "reason": "email_exists",
+            "error_type":"Bad Request",
+            "email": payload.email,
+        })
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email already registered",
@@ -71,6 +86,11 @@ async def register(
     db.add(user)
     await db.commit()
     await db.refresh(user)
+    logger.info({
+        "event": "user_registered successfully",
+        "user_id": user.id,
+        "email": user.email,
+    })
     return user
 
 
@@ -85,12 +105,25 @@ async def login(
     user = await get_user_by_email(db=db, email=form_data.username)
 
     if not user:
+        logger.warning({
+            "event": "login_failed",
+            "reason": "invalid_credentials",
+            "error_type":"Unauthorized",
+            "email": form_data.username,
+        })
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
         )
+    
 
     if not verify_password(form_data.password, user.password):
+        logger.warning({
+            "event": "login_failed",
+            "reason": "invalid_credentials",
+            "error_type":"Unauthorized",
+            "email": form_data.username,
+        })
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
@@ -98,6 +131,12 @@ async def login(
 
     # Create JWT token with email as subject
     access_token = create_access_token(data={"sub": user.email})
+
+    logger.info({
+        "event": "login_successful",
+        "user_id": user.id,
+        "email": user.email,
+    })
 
     return {"access_token": access_token, "token_type": "bearer"}
 

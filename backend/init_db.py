@@ -13,8 +13,6 @@ async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)  # Drop existing tables (fresh start)
         await conn.run_sync(Base.metadata.create_all)  # Create tables
-    print("✅ SQLite database initialized successfully!")
-    print("📁 Database file: ./leadflow.db")
 
 
 if __name__ == "__main__":

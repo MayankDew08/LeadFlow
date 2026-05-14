@@ -24,6 +24,8 @@ ENV/
 # dotenv
 .env
 .env.*
+!*.env.example
+!**/.env.example
 
 # Logs and reports
 *.log
