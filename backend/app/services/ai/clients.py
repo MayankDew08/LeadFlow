@@ -1,6 +1,6 @@
 from groq import AsyncGroq
 import google.generativeai as genai
-from tavily import TavilyClient
+from tavily import AsyncTavilyClient
 from dotenv import load_dotenv
 
 from app.core.config import settings
@@ -16,4 +16,4 @@ genai.configure(api_key=settings.gemini_api_key)
 GEMINI_MODEL = "gemini-1.5-pro"
 
 # ── Tavily (fallback search) ─────────────────────────────────────────────────
-tavily_client = TavilyClient(api_key=settings.tavily_api_key)
+tavily_client = AsyncTavilyClient(api_key=settings.tavily_api_key)

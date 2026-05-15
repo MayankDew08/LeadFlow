@@ -40,8 +40,6 @@ async def get_leads(
 ) -> tuple[list[dict], int]:
     """Fetch leads with optional filtering. Logs operation with timing."""
     start_time = time.time()
-    """Fetch leads with optional filtering. Logs operation with timing."""
-    start_time = time.time()
     filters = []
 
     if lead_id:
@@ -75,7 +73,7 @@ async def get_leads(
             )
 
     if follow_up_today:
-        today = datetime.now(timezone.utc).date().isoformat()
+        today = datetime.now(timezone.utc).date()
         filters.append(func.date(Lead.follow_up_at) == today)
         filters.append(Lead.status.notin_(["Won", "Lost"]))
 
@@ -290,7 +288,7 @@ async def update_lead(db: AsyncSession, lead: Lead, payload: LeadUpdate) -> Lead
                 value = value.value
             setattr(lead, field, value)
 
-        lead.updated_at = datetime.utcnow()
+        lead.updated_at = datetime.now(timezone.utc)
         await db.commit()
         await db.refresh(lead)
         
@@ -325,7 +323,7 @@ async def update_lead_follow_up(
     lead = result.scalar_one_or_none()
     if lead:
         lead.follow_up_at = follow_up_at
-        lead.updated_at = datetime.utcnow()
+        lead.updated_at = datetime.now(timezone.utc)
         await db.commit()
 
 

@@ -3,7 +3,7 @@ import logging
 import time
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from datetime import datetime
+from datetime import datetime, timezone
 
 from app.core.database import get_db
 from app.core.log_format import JSONFormatter
@@ -323,7 +323,7 @@ async def score(
             }
 
         latest = discussions[0]
-        days_since = (datetime.utcnow() - latest.created_at.replace(tzinfo=None)).days
+        days_since = (datetime.now(timezone.utc) - latest.created_at).days
 
         result = await score_lead(
             name=lead.name,

@@ -110,7 +110,7 @@ async def _try_gemini(company_name: str) -> dict | None:
         
         model = genai.GenerativeModel(
             model_name=GEMINI_MODEL,
-            tools="google_search_retrieval",
+            tools=[{"google_search_retrieval": {}}],
         )
         prompt = GEMINI_PROMPT.format(company_name=company_name)
         response = await model.generate_content_async(prompt)
@@ -158,7 +158,7 @@ async def _try_tavily_groq(company_name: str) -> dict | None:
             f"employees products news"
         )
 
-        search_response = await tavily_client.search_async(
+        search_response = await tavily_client.search(
             query=search_query,
             search_depth="basic",
             max_results=5,
