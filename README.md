@@ -112,7 +112,14 @@ All screenshots can be placed in `media/`.
 
 
 ### Lead Dialog + Timeline
-![Lead Dialog](media/LEAD_DIALOG.png)
+![Lead Dialog]
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d4cb2787-52aa-4313-abcc-364a6f5e6014" />
+
+<img width="1920" height="1080" alt="Screenshot From 2026-05-15 22-47-07" src="https://github.com/user-attachments/assets/23666b71-1465-425c-8d7d-032dcf68ecd4" />
+
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d2be0a0b-9bb0-49c4-8ff6-4f6e431bd6db" />
+
 
 ### AI Summary
 ![AI Summary]
