@@ -158,7 +158,7 @@ async def _try_tavily_groq(company_name: str) -> dict | None:
             f"employees products news"
         )
 
-        search_response = await tavily_client.search(
+        search_response = await tavily_client.search_async(
             query=search_query,
             search_depth="basic",
             max_results=5,

@@ -1,0 +1,75 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  LeadFlow — Docker Compose
+#
+#  Brings up the entire stack with one command:
+#    docker compose up --build
+#
+#  Services:
+#    - backend  → FastAPI on port 8000
+#    - frontend → Nginx serving React + proxying /api to backend on port 3000
+#
+#  External services (already configured via .env):
+#    - PostgreSQL → Supabase (cloud)
+#    - AI APIs    → Groq + Gemini + Tavily (cloud)
+# ═══════════════════════════════════════════════════════════════════════════
+
+services:
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # BACKEND — FastAPI
+  # ─────────────────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: leadflow-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      ENVIRONMENT: development
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - leadflow-network
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # FRONTEND — React + Vite (built) + Nginx (served + API proxy)
+  # ─────────────────────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Frontend talks to backend through Nginx /api proxy → no public URL needed
+        VITE_API_URL: ""
+    container_name: leadflow-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - leadflow-network
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  NETWORKS — Internal Docker network for service-to-service communication
+# ═══════════════════════════════════════════════════════════════════════════
+networks:
+  leadflow-network:
+    driver: bridge
+    name: leadflow-network

@@ -1,32 +1,39 @@
-import axios from 'axios';
-import { clearToken, getToken } from './auth';
+import axios from 'axios'
+import { getToken, clearToken } from './auth'
+
+// ── Smart baseURL detection ──────────────────────────────────────────────────
+// In production/Docker:  VITE_API_URL is empty → uses relative '/api'
+// In standalone dev:     VITE_API_URL = 'http://localhost:8000' → uses absolute
+const baseURL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api'
 
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api`,
-  headers: { 'Content-Type': 'application/json' },
-});
+  baseURL,
+  headers: { 'Content-Type': 'application/json' }
+})
 
+// ── Request interceptor: attach JWT token ────────────────────────────────────
 api.interceptors.request.use((config) => {
-  const token = getToken();
+  const token = getToken()
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${token}`
   }
-  return config;
-});
+  return config
+})
 
+// ── Response interceptor: handle 401 ─────────────────────────────────────────
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const status = error?.response?.status;
-    const requestUrl = error?.config?.url || '';
-    const onAuthPage = window.location.pathname === '/login' || window.location.pathname === '/signup';
-    const isLoginCall = requestUrl.includes('/auth/login');
-    if (status === 401 && !onAuthPage && !isLoginCall) {
-      clearToken();
-      window.location.href = '/login';
+    if (error.response?.status === 401) {
+      clearToken()
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login'
+      }
     }
-    return Promise.reject(error);
-  },
-);
+    return Promise.reject(error)
+  }
+)
 
-export default api;
+export default api

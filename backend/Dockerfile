@@ -1,4 +1,3 @@
-
 FROM python:3.11-slim
 
 # ── Environment ──────────────────────────────────────────────────────────────
@@ -34,5 +33,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
 # ── Start command ────────────────────────────────────────────────────────────
-# Runs Alembic migrations first, then starts the FastAPI server
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+# Initializes DB tables if they don't exist, then starts the FastAPI server
+CMD ["sh", "-c", "python init_db.py && uvicorn app.main:app --host 0.0.0.0 --port 8000"]

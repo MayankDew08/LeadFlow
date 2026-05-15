@@ -16,15 +16,17 @@ connect_args = {}
 if is_sqlite:
     connect_args["check_same_thread"] = False
 if is_postgres:
-    # Supabase/PgBouncer fixes:
-    # Disable prepared statements if using transaction pooling (common in Supabase)
-    connect_args["statement_cache_size"] = 0
+    # Psycopg 3 + PgBouncer/Supabase fixes:
+    # Disable prepared statements entirely for transaction pooling
+    connect_args["prepare_threshold"] = None
+
+from sqlalchemy.pool import NullPool
 
 engine = create_async_engine(
     database_url,
     echo=settings.environment == "development",
     connect_args=connect_args,
-    future=True,
+    poolclass=NullPool,
 )
 
 

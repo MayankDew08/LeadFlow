@@ -10,10 +10,6 @@ class Settings(BaseSettings):
     # ─── Database ─────────────────────────────────────────────────────────────
     database_url: str = Field("sqlite+aiosqlite:///./leadflow.db", validation_alias="DATABASE_URL")
 
-    # ─── Redis / Upstash ──────────────────────────────────────────────────────
-    redis_url: str = Field(..., validation_alias="UPSTASH_REDIS_REST_URL")
-    redis_token: str = Field("", validation_alias="UPSTASH_REDIS_REST_TOKEN")
-
     # ─── AI providers ─────────────────────────────────────────────────────────
     anthropic_api_key: str = Field("", validation_alias="ANTHROPIC_API_KEY")
     gemini_api_key: str = Field("", validation_alias="GEMINI_API_KEY")
@@ -38,10 +34,14 @@ class Settings(BaseSettings):
 
     @property
     def async_database_url(self) -> str:
-        """Return the database URL (SQLite is already async-ready, Postgres needs dialect)."""
+        """Return the database URL (SQLite is already async-ready, Postgres needs dialect and pgbouncer fixes)."""
         url = self.database_url.strip().strip('"').strip("'")
-        if url.startswith("postgresql://"):
-            return url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        # Use psycopg driver for better PgBouncer/Supabase compatibility
+        url = url.replace("postgresql://", "postgresql+psycopg://")
+        url = url.replace("postgres://", "postgresql+psycopg://")
+        
+        # Psycopg uses different param for disabling prepared statements
+        # but we can also handle this in database.py
         return url
 
 
