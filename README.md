@@ -1,4 +1,4 @@
-# ⚡ LeadFlow
+<img width="1920" height="1080" alt="Screenshot From 2026-05-15 19-40-36" src="https://github.com/user-attachments/assets/d841dc71-8566-4b76-b112-954debbc5346" /># ⚡ LeadFlow
 
 A production-style Lead Management CRM built for sales reps — single screen, modal-driven, AI-augmented.
 
@@ -8,7 +8,8 @@ A production-style Lead Management CRM built for sales reps — single screen, m
 
 ## 🎬 Demo
 
-📹 **Walkthrough Video**: <a href="[https://drive.google.com/file/d/1T-aRgZDUKcdGSpfexXrlcPj4mhEHEJnL/view?usp=sharing](https://drive.google.com/file/d/1T-aRgZDUKcdGSpfexXrlcPj4mhEHEJnL/view?usp=sharing)">Watch on Google Drive</a>
+📹 **Walkthrough Video**: 
+https://drive.google.com/file/d/1T-aRgZDUKcdGSpfexXrlcPj4mhEHEJnL/view?usp=sharing
 
 ---
 
