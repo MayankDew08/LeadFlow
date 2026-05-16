@@ -8,7 +8,7 @@ A production-style Lead Management CRM built for sales reps — single screen, m
 
 ## 🎬 Demo
 
-📹 **Walkthrough Video**: <a href="https://drive.google.com/file/d/1T-aRgZDUKcdGSpfexXrlcPj4mhEHEJnL/view?usp=sharing">Watch on Google Drive</a>
+📹 **Walkthrough Video**: <a href="[https://drive.google.com/file/d/1T-aRgZDUKcdGSpfexXrlcPj4mhEHEJnL/view?usp=sharing](https://drive.google.com/file/d/1T-aRgZDUKcdGSpfexXrlcPj4mhEHEJnL/view?usp=sharing)">Watch on Google Drive</a>
 
 ---
 
@@ -128,14 +128,14 @@ docker compose exec backend pytest tests/test_leads.py -v
 │                              │ FastAPI :8000│                │
 │                              └──────┬───────┘                │
 │                                     │                        │
-│              ┌──────────────────────┼──────────────────────┐ │
-│              ▼                      ▼                      ▼ │
-│        ┌──────────┐          ┌──────────┐          ┌──────────┐
-│        │ Supabase │          │ Upstash  │          │ AI APIs  │
-│        │ Postgres │          │  Redis   │          │ Groq +   │
-│        │          │          │          │          │ Gemini + │
-│        │          │          │          │          │ Tavily   │
-│        └──────────┘          └──────────┘          └──────────┘
+│              ┌──────────────────────┼───────┐                │
+│              ▼                              ▼                │
+│        ┌──────────┐                    ┌──────────┐
+│        │ Supabase │                    │ AI APIs  │
+│        │ Postgres │                    │ Groq +   │
+│        │          │                    │ Gemini + │
+│        │          │                    │ Tavily   │
+│        └──────────┘                    └──────────┘
 │                                                              │
 └──────────────────────────────────────────────────────────────┘
 ```
@@ -265,7 +265,8 @@ Full interactive docs at `http://localhost:8000/docs`
 ## 📸 Screenshots
 
 ### Backend Overview
-<img src="https://github.com/user-attachments/assets/c7810637-9993-4131-ade4-38085aed7967">
+<img width="1920" height="1080" alt="Screenshot From 2026-05-15 19-40-36" src="https://github.com/user-attachments/assets/b048c22e-e561-4cd2-ab16-80db8a2f050e" />
+
 
 ### Lead List with Filters
 <img src="https://github.com/user-attachments/assets/07e92f0a-4e38-4be2-8dbf-c02543d7b2c4">
